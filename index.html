@@ -102,18 +102,27 @@ function viewPoints(_label, _lat, _lng, _heading, _pitch, _range) {
 }
 
 var viewPointsArray=[];
-viewPointsArray[0]=new viewPoints("-",32.750278,129.877778,0,-89,6000);
-viewPointsArray[1]=new viewPoints("初期視点",32.750278,129.877778,45,-89,2000);
-viewPointsArray[2]=new viewPoints("日本全国",37.95041488123474,137.44348377604837,0,-85,3421711);
-viewPointsArray[3]=new viewPoints("長崎",32.750278,129.877778,0,-89,10000);
+var _data = [
+// label, lat, lng, heading, pitch, range
+["-", 32.750278, 129.877778, 0, -89, 6000],
+["初期視点", 32.750278, 129.877778, 45, -39, 2000],
+["日本全国", 37.95041488123474, 137.44348377604837, 0, -85, 3421711],
+["長崎A", 32.750278, 129.877778, 0, -10, 1000],
+["長崎B", 32.750278, 129.877778, 120, -10, 1000],
+["長崎C", 32.750278, 129.877778, 240, -10, 1000]
+];
+for(var i = 0; i < _data.length; i++) {
+	viewPointsArray[i] = new viewPoints(
+		_data[i][0], _data[i][1], _data[i][2],
+		_data[i][3], _data[i][4], _data[i][5]);
+}
 
 //視点メニュー作成
-
 var viewPointChangeMenu = document.getElementById('slide_menu');
 var dropDownList = "";
 
 for (var i=0; i<viewPointsArray.length; i++) {
-	dropDownList = dropDownList + '<li><a href="#" onclick = "changeViewPoint(' + i + ',' + '3.0);return false;">' + viewPointsArray[i].label + '</a></li>';
+	dropDownList = dropDownList + '<li><a href="#" onclick = "changeViewPoint(' + i + ',' + '20.0);return false;">' + viewPointsArray[i].label + '</a></li>';
 }
 
 var viewPointChangeMenuHtml = '<ul class="viewpoint">' + dropDownList + '</ul>';
