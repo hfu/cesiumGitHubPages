@@ -18,7 +18,7 @@
 	<script src="Cesium/Cesium.js"></script>
 	<script src="http://www.google.com/jsapi"></script>
 	<script src="http://maps.google.com/maps/api/js"></script>
-	<script src="https://raw.githubusercontent.com/hfu/Cesium-JapanGSI/master/JapanGSITerrainProvider.js"></script>
+	<script src="JapanGSITerrainProvider.js"></script>
 </head>
 <body>
 	<div class="geocode">
@@ -137,7 +137,7 @@ var openStreetMap=[];
 //ビューア初期化
 
 var viewer = new Cesium.Viewer('cesiumContainer',{
-	imageryProvider : new Cesium.OpenStreetMapImageryProvider({
+	imageryProvider : new Cesium.createOpenStreetMapImageryProvider({
 			url: 'http://cyberjapandata.gsi.go.jp/xyz/ort/',
 			fileExtension: 'jpg',
 			credit: new Cesium.Credit('地理院タイル', '', 'http://maps.gsi.go.jp/development/ichiran.html')
@@ -152,43 +152,23 @@ var viewer = new Cesium.Viewer('cesiumContainer',{
 	scene3DOnly : true
 });
 
-//地形にエンティティが潜るように設定
-
 viewer.scene.globe.depthTestAgainstTerrain = true;
-
-//地形メッシュを設定
-/*
-var cesiumTerrainProviderMeshes = new Cesium.CesiumTerrainProvider({
-	url : '//assets.agi.com/stk-terrain/world',
-	requestWaterMask : false,
-	requestVertexNormals : false
-});
-viewer.terrainProvider = cesiumTerrainProviderMeshes;
-*/
 viewer.terrainProvider = new Cesium.JapanGSITerrainProvider({});
-
-//地形を強調する際は値を変更
-
 viewer.terrainExaggeration = 1.0;
 
 //フォグ
-
 var fog = new Cesium.Fog();
 fog.density = 0.0005;
 fog.screenSpaceErrorFactor = 100.0;
 
 //ダブルクリック操作不可
-
 viewer.screenSpaceEventHandler.removeInputAction(Cesium.ScreenSpaceEventType.LEFT_DOUBLE_CLICK);
 
 //起動シークエンス
-
 $(function() {
 	$('.cesium-widget-credits').css('display', 'none');
 });
-
 fadeInOut(blackOutDiv,0);
-
 var layers = viewer.scene.imageryLayers;
 changeViewPoint(2,0);
 setTimeout('groundZero()',1000);
@@ -201,12 +181,12 @@ function groundZero(){
 
 function landing(){
 	changeViewPoint(1,3);
-	setTimeout('fadeInOut(blackOutDiv,1)',3000);
-	setTimeout('loadCzml()',3000);
+	//setTimeout('fadeInOut(blackOutDiv,1)',3000);
+	//setTimeout('loadCzml()',3000);
 }
 
 //CZMLロード関数
-
+/*
 function loadCzml(){
 	var i = 0;
 	var load = setInterval(function(){
@@ -250,23 +230,16 @@ function loadCzml(){
 		}
 	}, 200);
 }
-
+*/
 //地図オーバレイ関数
 
 function openStreetMapLayer (){
-
-	openStreetMap = layers.addImageryProvider(new Cesium.createOpenStreetMapImageryProvider());
-
+	openStreetMap = layers.addImageryProvider(new Cesium.createOpenStreetMapImageryProvider({url: 'http://cyberjapandata.gsi.go.jp/xyz/std/'}));
 //OSMの明度を下げる
-
 openStreetMap.brightness = 0.7;
-
 //OSMの不透明度をデフォルト0に
-
 openStreetMap.alpha = 0;
-
 //オーバーレイ配列作成関数
-
 function overlayData(_label, _value, _overlayObj, _id) {
 	this.label = _label;
 	this.value = _value;
@@ -349,7 +322,6 @@ function geocode() {
 }
 
 //ダブルクリックでストビューを表示する関数
-
 function setClickEvent(){
 	var handler = new Cesium.ScreenSpaceEventHandler(viewer.scene.canvas);
 	handler.setInputAction(function(click) {
@@ -409,7 +381,6 @@ function setClickEvent(){
 }
 
 //時間チェック
-
 function checkTime() {
 	viewer.clock.multiplier = 3000 * 60 * 60;
 
@@ -440,20 +411,17 @@ function checkTime() {
 }
 
 //カウンター表示
-
 function timeCounter(displayTime){
 	var timeCounter = document.getElementById("timeCounter");
 	timeCounter.innerHTML = '<p class="timeCounter">' + displayTime +'</p>';
 }
 
 //ヘルプ
-
 function help(){
 	window.open('https://github.com/hwtnv/cesiumGitHubPages');
 }
 
 //DIVのフェードイン・アウト関数
-
 function fadeInOut(layer,param) {
 	if (param == 0){
 		$(function() {
@@ -469,7 +437,6 @@ function fadeInOut(layer,param) {
 }
 
 //ストビューDIVのフェードアウト関数
-
 function svOnOff(param) {
 	if (param == 0){
 		streetViewWrapper.style.display = "none";
